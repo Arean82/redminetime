@@ -1,54 +1,57 @@
-using GalaSoft.MvvmLight.Messaging;
-using Unosquare.RedmineTime.Helpers;
-using Unosquare.RedmineTime.Models;
-using Unosquare.RedmineTime.Models.Messages;
+/*
+  In App.xaml:
+  <Application.Resources>
+      <vm:ViewModelLocator xmlns:vm="clr-namespace:Unosquare.RedmineTime"
+                           x:Key="Locator" />
+  </Application.Resources>
+  
+  In the View:
+  DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
+
+  You can also use Blend to do all this with the tool's support.
+  See http://www.galasoft.ch/mvvm
+*/
+
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Unosquare.RedmineTime.ViewModel
 {
+    /// <summary>
+    /// This class contains static references to all the view models in the
+    /// application and provides an entry point for the bindings.
+    /// </summary>
     public class ViewModelLocator
     {
-        private RedmineService _redmineService;
-        private MainViewModel _mainViewModel;
-
+        /// <summary>
+        /// Initializes a new instance of the ViewModelLocator class.
+        /// </summary>
         public ViewModelLocator()
         {
-            Messenger.Default.Register<RedmineConnectionSuccessMessage>(this, SetRedmineService);
-            Messenger.Default.Register<ProjectSelectedMessage>(this, ProjectSelected);
+            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+
+            ////if (ViewModelBase.IsInDesignModeStatic)
+            ////{
+            ////    // Create design time view services and models
+            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
+            ////}
+            ////else
+            ////{
+            ////    // Create run time view services and models
+            ////    SimpleIoc.Default.Register<IDataService, DataService>();
+            ////}
+
+            SimpleIoc.Default.Register<MainViewModel>();
         }
 
-        private void ProjectSelected(ProjectSelectedMessage message)
+        public MainViewModel Main
         {
-            LogPeriod?.Cleanup();
-            LogPeriod = new LogPeriodViewModel();
-            ActivityDetails = new ActivityDetailsViewModel();
-            Messenger.Default.Send(new LogTimeMessage(message.User, message.UserProject, message.Period));
-        }
-
-        private void SetRedmineService(RedmineConnectionSuccessMessage message)
-        {
-            RedmineService = message.ServiceInstance;
-            Messenger.Default.Send(new SelectProjectMessage());
-        }
-
-        public RedmineService RedmineService
-        {
-            get { return _redmineService; }
-            set
+            get
             {
-                _redmineService = value;
-                ProjectSelection = new ProjectSelectionViewModel(RedmineService);
+                return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
-
-        public MainViewModel Main => _mainViewModel ?? (_mainViewModel = new MainViewModel());
-
-        public ActivityDetailsViewModel ActivityDetails { get; private set; } 
-
-        public ProjectSelectionViewModel ProjectSelection { get; set; }
-
-        public LogPeriodViewModel LogPeriod { get; private set; }
-
-        public ConfigurationViewModel Configuration => new ConfigurationViewModel(new LoggerConfiguration());
         
         public static void Cleanup()
         {
