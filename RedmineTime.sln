@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2019
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedmineTime", "RedmineTime\RedmineTime.csproj", "{B6B6E911-9A67-4602-90E7-BD69BA5C64A2}"
 EndProject
@@ -48,5 +48,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{479EB7E8-6D1D-4352-9F1B-E7882946DD47} = {D96C5C30-4267-4610-AF08-72A3C012346F}
 		{E5D6E9AE-6BD2-462D-9D4B-B2A593324B1B} = {D96C5C30-4267-4610-AF08-72A3C012346F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8EF5E4AF-7062-493E-8E7E-E0900942642F}
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.2\lib\NET35
 	EndGlobalSection
 EndGlobal
